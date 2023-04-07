@@ -44,7 +44,7 @@ async function displayData(location, units) {
       } else {
         return data;
       }
-    })
+    });
     .catch((error) => {
       errorMsg.classList.remove("hidden");
       errorMsg.innerHTML = "Something went wrong. Try again.";

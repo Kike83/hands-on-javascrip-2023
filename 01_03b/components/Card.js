@@ -31,8 +31,8 @@ const getDate = (imgData) => {
   return niceDate;
 };
 
-const Card = (data) => {
-  const imgData = data[0];
+const Card = (imgData) => {
+
 
   return `
     <figure class="image">

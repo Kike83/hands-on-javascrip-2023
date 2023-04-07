@@ -33,19 +33,44 @@ const unitChanger = () => {
 };
 
 async function displayData(location, units) {
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=${settings.appid}`
+  const currentLoc = await fetch(
+    `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&APPID${settings.appid}`
   )
-    .then(function (response) {
-      return response.json();
-    })
+    .then((response) => response.json())
     .then(function (data) {
-      console.log(data);
-      mainContent.innerHTML = weatherCard(data, units);
-    })
-    .then(function () {
-      unitChanger();
+      if (data.length === 0) {
+        errorMsg.classList.remove("hidden");
+        errorMsg.innerHTML = "No location by that name. Please make a new input";
+      } else {
+        return data;
+      }
     });
+.catch((error) => {
+  errorMsg.classList.remove("hidden");
+  errorMsg.innerHTML = "Sorry, something went wrong. Please try again"
+  console.error("Location for query with error:", error);
+});
+
+
+
+  if (currentLoc) {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${currentLoc[0].lat}&lon=${currentLoc[0].lon}`
+    )
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        console.log(data);
+        mainContent.innerHTML = weatherCard(data, units);
+      })
+      .then(function () {
+        unitChanger();
+      });
+      .catch((error) => {
+        console.error("The weather query error:", error);
+      });
+  }
 }
 
 displayData(location, units);
